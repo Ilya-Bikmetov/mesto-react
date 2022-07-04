@@ -1,7 +1,5 @@
 function PopupWithForm({ name, title, isOpen, onClose, children }) {
 
-
-
   return (
     <>
       <div className={isOpen
