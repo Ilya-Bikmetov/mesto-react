@@ -1,17 +1,21 @@
-function Card({ item, userId }) {
+function Card({ card, userId, removeCard, onCardClick }) {
+
+  function handleClick() {
+    onCardClick(card);
+  }
 
   return (
     <li className="element">
-      <button type="button" aria-label="Удалить" className="element__trash" style={
-        item.owner._id === userId
+      <button onClick={removeCard} type="button" aria-label="Удалить" className="element__trash" style={
+        card.owner._id === userId
           ? { visibility: "visible" }
           : { visibility: "hidden" }
       }></button>
-      <img src={item.link} className="element__photo" />
+      <img onClick={handleClick} src={card.link} alt={card.name} className="element__photo" />
       <div className="element__sign">
-        <h2 className="element__title">{item.name}</h2>
+        <h2 className="element__title">{card.name}</h2>
         <button className={
-          item.likes.some(item => item._id === userId)
+          card.likes.some(item => item._id === userId)
             ? `element__like element__like_active`
             : `element__like`
         }
@@ -19,10 +23,10 @@ function Card({ item, userId }) {
           aria-label="Поставить лайк"></button>
       </div>
       <p className={
-        item.likes.length > 0
+        card.likes.length > 0
           ? `element__likes-amount element__likes-amount_active`
           : `element__likes-amount`
-      }>{item.likes.length}</p>
+      }>{card.likes.length}</p>
     </li>
   )
 }

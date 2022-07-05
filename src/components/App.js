@@ -9,7 +9,9 @@ function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupState] = useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupState] = useState(false);
   const [isEditAvatarPopupOpen, setEditAvatarPopupState] = useState(false);
-  const [isDeleteCardPopupOpen, setisDeleteCardPopupOpen] = useState(false);
+  const [isDeleteCardPopupOpen, setDeleteCardPopupOpenState] = useState(false);
+  const [isImageCardPopupOpen, setImageCardPopupOpenState] = useState(false);
+  const [selectedCard, setSelectedCard] = useState('');
 
   function handleEditProfileClick() {
     setEditProfilePopupState(true);
@@ -24,7 +26,16 @@ function App() {
   }
 
   function handleDeleteCardClick() {
-    setisDeleteCardPopupOpen(true);
+    setDeleteCardPopupOpenState(true);
+  }
+
+  function handleImageCardClick() {
+    setImageCardPopupOpenState(true);
+  }
+
+  function handleCardClick(card) {
+    setSelectedCard(card);
+    handleImageCardClick();
   }
 
   function closeAllPopups() {
@@ -35,11 +46,13 @@ function App() {
     if (isEditAvatarPopupOpen)
       setEditAvatarPopupState(false);
     if (isDeleteCardPopupOpen)
-      setisDeleteCardPopupOpen(false);
+      setDeleteCardPopupOpenState(false);
+    if (isImageCardPopupOpen)
+      setImageCardPopupOpenState(false);
   }
 
   useEffect(() => {
-    if (isEditProfilePopupOpen || isAddPlacePopupOpen || isEditAvatarPopupOpen || isDeleteCardPopupOpen) {
+    if (isEditProfilePopupOpen || isAddPlacePopupOpen || isEditAvatarPopupOpen || isDeleteCardPopupOpen || isImageCardPopupOpen) {
       function handleEscClose(evt) {
         if (evt.key === 'Escape') {
           closeAllPopups();
@@ -58,7 +71,7 @@ function App() {
         document.removeEventListener('mousedown', handleMouseClickClose);
       };
     }
-  }, [isEditProfilePopupOpen, isAddPlacePopupOpen, isEditAvatarPopupOpen, isDeleteCardPopupOpen]);
+  }, [isEditProfilePopupOpen, isAddPlacePopupOpen, isEditAvatarPopupOpen, isDeleteCardPopupOpen, isImageCardPopupOpen]);
 
   return (
     <div className="root">
@@ -68,9 +81,15 @@ function App() {
           onEditProfile={handleEditProfileClick}
           onAddPlace={handleAddPlaceClick}
           onEditAvatar={handleEditAvatarClick}
+          onDeleteCard={handleDeleteCardClick}
+          onCardClick={handleCardClick}
         />
         <Footer />
-        <ImagePopup />
+        <ImagePopup
+          card={selectedCard}
+          isOpen={isImageCardPopupOpen}
+          onClose={closeAllPopups}
+        />
         <PopupWithForm
           name='place_edit'
           title='Редактировать профиль'
@@ -164,29 +183,13 @@ function App() {
         >
           <button className="popup__btn" id="confirm-delete-btn" type="submit" aria-label="Удалить картинку">Да</button>
         </PopupWithForm>
-        {/* <div className="popup popup_delete_card">
-          <form className="popup__content">
-            <h2 className="popup__title">Вы уверены?</h2>
-            <button className="popup__close popup__close_form_img" type="button" aria-label="Закрыть"></button>
-            <button className="popup__btn" id="confirm-delete-btn" type="submit" aria-label="Удалить картинку">Да</button>
-          </form>
-        </div> */}
 
       </div>
-      <template id="template-сard">
-        <li className="element">
-          <button type="button" aria-label="Удалить" className="element__trash"></button>
-          <img className="element__photo" />
-          <div className="element__sign">
-            <h2 className="element__title"></h2>
-            <button className="element__like" type="button" aria-label="Поставить лайк"></button>
-          </div>
-          <p className="element__likes-amount"></p>
-        </li>
-      </template>
 
     </div>
+
   );
+
 }
 
 export default App;
