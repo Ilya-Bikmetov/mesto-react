@@ -11,7 +11,7 @@ function App() {
   const [isEditAvatarPopupOpen, setEditAvatarPopupState] = useState(false);
   const [isDeleteCardPopupOpen, setDeleteCardPopupOpenState] = useState(false);
   const [isImageCardPopupOpen, setImageCardPopupOpenState] = useState(false);
-  const [selectedCard, setSelectedCard] = useState('');
+  const [selectedCard, setSelectedCard] = useState({});
 
   function handleEditProfileClick() {
     setEditProfilePopupState(true);
@@ -95,6 +95,7 @@ function App() {
           title='Редактировать профиль'
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
+          buttonText={'Сохранить'}
         >
           <div className="popup__field">
             <input
@@ -122,13 +123,13 @@ function App() {
             />
             <span id="job-input-error" className="popup__input-error">Вы пропустили это поле.</span>
           </div>
-          <button className="popup__btn" type="submit" aria-label="Сохранить">Сохранить</button>
         </PopupWithForm>
         <PopupWithForm
           name='place_add'
           title='Новое место'
           isOpen={isAddPlacePopupOpen}
           onClose={closeAllPopups}
+          buttonText={'Создать'}
         >
           <div className="popup__field">
             <input
@@ -154,13 +155,13 @@ function App() {
             />
             <span id="url-input-error" className="popup__input-error">Введите адрес сайта.</span>
           </div>
-          <button className="popup__btn" type="submit" aria-label="Создать">Создать</button>
         </PopupWithForm>
         <PopupWithForm
           name='avatar'
           title='Обновить аватар'
           isOpen={isEditAvatarPopupOpen}
           onClose={closeAllPopups}
+          buttonText={'Сохранить'}
         >
           <div className="popup__field">
             <input
@@ -173,15 +174,14 @@ function App() {
             />
             <span id="avatar-url-input-error" className="popup__input-error">Введите адрес сайта.</span>
           </div>
-          <button className="popup__btn" id="confirm-change-avatar-btn" type="submit" aria-label="Сохранить аватар">Сохранить</button>
         </PopupWithForm>
         <PopupWithForm
           name='delete_card'
           title='Вы уверены?'
           isOpen={isDeleteCardPopupOpen}
           onClose={closeAllPopups}
+          buttonText={'Да'}
         >
-          <button className="popup__btn" id="confirm-delete-btn" type="submit" aria-label="Удалить картинку">Да</button>
         </PopupWithForm>
 
       </div>

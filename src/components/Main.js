@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { api } from '../utils/Api.js';
 import Card from './Card.js';
 
-function Main({onEditAvatar, onEditProfile, onAddPlace, onDeleteCard, onCardClick}) {
+function Main({ onEditAvatar, onEditProfile, onAddPlace, onDeleteCard, onCardClick }) {
   const [userName, setUserName] = useState('');
   const [userDescription, setUserDescription] = useState('');
   const [userAvatar, setUserAvatar] = useState('');
@@ -22,7 +22,7 @@ function Main({onEditAvatar, onEditProfile, onAddPlace, onDeleteCard, onCardClic
 
   }, []);
 
-    return (
+  return (
     <>
       <section className="profile">
         <div className="profile__user-set">
@@ -43,7 +43,17 @@ function Main({onEditAvatar, onEditProfile, onAddPlace, onDeleteCard, onCardClic
       </section>
       <section className="elements">
         <ul className="elements__list">
-          {cards.map((card) => <Card key={card._id} card={card} onCardClick={onCardClick} removeCard={onDeleteCard} userId={userId}/>)}
+          {
+            cards.map((card) => (
+              <Card
+                key={card._id}
+                card={card}
+                onCardClick={onCardClick}
+                removeCard={onDeleteCard}
+                userId={userId}
+              />
+            ))
+          }
         </ul>
       </section>
     </>
