@@ -39,16 +39,11 @@ function App() {
   }
 
   function closeAllPopups() {
-    if (isEditProfilePopupOpen)
-      setEditProfilePopupState(false);
-    if (isAddPlacePopupOpen)
-      setAddPlacePopupState(false);
-    if (isEditAvatarPopupOpen)
-      setEditAvatarPopupState(false);
-    if (isDeleteCardPopupOpen)
-      setDeleteCardPopupOpenState(false);
-    if (isImageCardPopupOpen)
-      setImageCardPopupOpenState(false);
+    isEditProfilePopupOpen && setEditProfilePopupState(false);
+    isAddPlacePopupOpen && setAddPlacePopupState(false);
+    isEditAvatarPopupOpen && setEditAvatarPopupState(false);
+    isDeleteCardPopupOpen && setDeleteCardPopupOpenState(false);
+    isImageCardPopupOpen && setImageCardPopupOpenState(false);
   }
 
   useEffect(() => {
