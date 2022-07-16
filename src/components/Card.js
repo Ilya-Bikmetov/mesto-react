@@ -1,13 +1,20 @@
-function Card({ card, userId, removeCard, onCardClick }) {
+import { useContext } from 'react';
+import { CurrentUserContext } from '../contexts/CurrentUserContext.js'
 
+function Card({ card, removeCard, onCardClick, onCardLike }) {
+  const currentUser = useContext(CurrentUserContext);
   function handleClick() {
     onCardClick(card);
+  }
+
+  function handleLike() {
+    onCardLike(card)
   }
 
   return (
     <li className="element">
       <button onClick={removeCard} type="button" aria-label="Удалить" className="element__trash" style={
-        card.owner._id === userId
+        card.owner._id === currentUser._id
           ? { visibility: "visible" }
           : { visibility: "hidden" }
       }></button>
@@ -15,10 +22,11 @@ function Card({ card, userId, removeCard, onCardClick }) {
       <div className="element__sign">
         <h2 className="element__title">{card.name}</h2>
         <button className={
-          card.likes.some(item => item._id === userId)
+          card.likes.some(item => item._id === currentUser._id)
             ? `element__like element__like_active`
             : `element__like`
         }
+          onClick={handleLike}
           type="button"
           aria-label="Поставить лайк"></button>
       </div>

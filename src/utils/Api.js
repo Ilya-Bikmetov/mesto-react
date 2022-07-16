@@ -75,20 +75,21 @@ class Api {
       .then(this._checkResponse)
   }
 
-  addLike(url) {
-    return fetch(`${this._baseUrl}${url}`, {
-      method: 'PUT',
-      headers: this._headers,
-    })
-      .then(this._checkResponse)
-  }
+  changeLikeCardStatus(url, isLiked) {
+    if (!isLiked) {
+      return fetch(`${this._baseUrl}${url}`, {
+        method: 'PUT',
+        headers: this._headers,
+      })
+        .then(this._checkResponse)
+    } else {
+      return fetch(`${this._baseUrl}${url}`, {
+        method: 'DELETE',
+        headers: this._headers,
+      })
+        .then(this._checkResponse)
 
-  deleteLike(url) {
-    return fetch(`${this._baseUrl}${url}`, {
-      method: 'DELETE',
-      headers: this._headers,
-    })
-      .then(this._checkResponse)
+    }
   }
 
 }

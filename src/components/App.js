@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState,  } from 'react';
 import Footer from "./Footer.js";
 import Header from "./Header.js";
 import ImagePopup from "./ImagePopup.js";
 import Main from "./Main.js";
 import PopupWithForm from "./PopupWithForm.js";
+import {api} from "../utils/Api.js"
+import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 
 function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupState] = useState(false);
@@ -12,6 +14,7 @@ function App() {
   const [isDeleteCardPopupOpen, setDeleteCardPopupOpenState] = useState(false);
   const [isImageCardPopupOpen, setImageCardPopupOpenState] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
+  const [currentUser, setCurrentUser] = useState({});
 
   function handleEditProfileClick() {
     setEditProfilePopupState(true);
@@ -68,9 +71,19 @@ function App() {
     }
   }, [isEditProfilePopupOpen, isAddPlacePopupOpen, isEditAvatarPopupOpen, isDeleteCardPopupOpen, isImageCardPopupOpen]);
 
+  useEffect(() => {
+    api.getUser('users/me')
+      .then((userData) => {
+        setCurrentUser(userData);
+      })
+      .catch((err) => console.log(err));
+
+  }, []);
+
   return (
     <div className="root">
       <div className="page">
+        <CurrentUserContext.Provider value={currentUser}>
         <Header />
         <Main
           onEditProfile={handleEditProfileClick}
@@ -80,6 +93,7 @@ function App() {
           onCardClick={handleCardClick}
         />
         <Footer />
+        </CurrentUserContext.Provider>
         <ImagePopup
           card={selectedCard}
           isOpen={isImageCardPopupOpen}
