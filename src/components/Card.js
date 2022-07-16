@@ -1,19 +1,16 @@
 import { useContext } from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js'
 
-function Card({ card, removeCard, onCardClick, onCardLike }) {
+function Card({ card, removeCard, onCardClick, onCardLike, onCardDelete }) {
   const currentUser = useContext(CurrentUserContext);
-  function handleClick() {
-    onCardClick(card);
-  }
+  const handleClick = () => onCardClick(card);
+  const handleLike = () => onCardLike(card);
+  const handleDeleteClick  = () => onCardDelete(card);
 
-  function handleLike() {
-    onCardLike(card)
-  }
 
   return (
     <li className="element">
-      <button onClick={removeCard} type="button" aria-label="Удалить" className="element__trash" style={
+      <button onClick={handleDeleteClick} type="button" aria-label="Удалить" className="element__trash" style={
         card.owner._id === currentUser._id
           ? { visibility: "visible" }
           : { visibility: "hidden" }

@@ -11,11 +11,17 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onDeleteCard, onCardCli
     const isLiked = card.likes.some(i => i._id === currentUser._id);
 
     api.changeLikeCardStatus(`cards/${card._id}/likes`, isLiked)
-      .then((newCard) => {
-        setCards((cards) => cards.map((c) => c._id === card._id ? newCard : c));
-      })
+      .then((newCard) => setCards((cards) => cards.map((c) => c._id === card._id ? newCard : c)))
       .catch((err) => console.log(err));
   }
+
+  function handleCardDelete(card) {
+    api.deleteCard(`cards/${card._id}`)
+      .then(() => setCards((cards) => cards.filter((c) => c._id !== card._id)))
+      .catch((err) => console.log(err));
+  }
+
+
 
   useEffect(() => {
     api.getInitialCards('cards')
@@ -54,6 +60,7 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onDeleteCard, onCardCli
                 card={card}
                 onCardClick={onCardClick}
                 onCardLike={handleCardLike}
+                onCardDelete={handleCardDelete}
                 removeCard={onDeleteCard}
               />
             ))
