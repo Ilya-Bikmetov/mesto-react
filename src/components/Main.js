@@ -21,8 +21,6 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onDeleteCard, onCardCli
       .catch((err) => console.log(err));
   }
 
-
-
   useEffect(() => {
     api.getInitialCards('cards')
       .then((items) => {

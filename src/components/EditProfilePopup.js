@@ -16,6 +16,11 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
       about: description
     });
   }
+  const handleClose = () => {
+    onClose();
+    setName(currentUser.name);
+    setDescription(currentUser.about);
+  }
 
   useEffect(() => {
     setName(currentUser.name);
@@ -28,7 +33,7 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
       name='place_edit'
       title='Редактировать профиль'
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       onSubmit={handleSubmit}
       buttonText={'Сохранить'}
     >

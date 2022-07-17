@@ -7,6 +7,7 @@ import PopupWithForm from "./PopupWithForm.js";
 import { api } from "../utils/Api.js"
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import EditProfilePopup from './EditProfilePopup.js';
+import EditAvatarPopup from './EditAvatarPopup.js';
 
 function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupState] = useState(false);
@@ -15,7 +16,7 @@ function App() {
   const [isDeleteCardPopupOpen, setDeleteCardPopupOpenState] = useState(false);
   const [isImageCardPopupOpen, setImageCardPopupOpenState] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
-  const [currentUser, setCurrentUser] = useState({});
+  const [currentUser, setCurrentUser] = useState({name: '', about: '', avatar: ''});
 
   const handleEditProfileClick = () => setEditProfilePopupState(true);
   const handleAddPlaceClick = () => setAddPlacePopupState(true);
@@ -31,7 +32,16 @@ function App() {
   const handleUpdateUser = ({ name, about }) => {
     api.addUser({ name, about }, 'users/me')
       .then((user) => {
-        setCurrentUser(user)
+        setCurrentUser(user);
+      })
+      .catch((err) => console.log(err));
+    closeAllPopups();
+  }
+
+  const handleUpdateAvatar = (avatarLink) => {
+    api.setAvatar('users/me/avatar', avatarLink)
+      .then((user) => {
+        setCurrentUser(user);
       })
       .catch((err) => console.log(err));
     closeAllPopups();
@@ -90,12 +100,14 @@ function App() {
           />
           <Footer />
           <EditProfilePopup isOpen={isEditProfilePopupOpen} onUpdateUser={handleUpdateUser} onClose={closeAllPopups} />
+          <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onUpdateAvatar={handleUpdateAvatar} onClose={closeAllPopups} />
         </CurrentUserContext.Provider>
         <ImagePopup
           card={selectedCard}
           isOpen={isImageCardPopupOpen}
           onClose={closeAllPopups}
         />
+
         <PopupWithForm
           name='place_add'
           title='Новое место'
@@ -128,25 +140,7 @@ function App() {
             <span id="url-input-error" className="popup__input-error">Введите адрес сайта.</span>
           </div>
         </PopupWithForm>
-        <PopupWithForm
-          name='avatar'
-          title='Обновить аватар'
-          isOpen={isEditAvatarPopupOpen}
-          onClose={closeAllPopups}
-          buttonText={'Сохранить'}
-        >
-          <div className="popup__field">
-            <input
-              id="avatar-url-input"
-              type="url"
-              name="avatarLink"
-              className="popup__input popup__input_avatar-form_link"
-              placeholder="Ссылка на аватар"
-              required
-            />
-            <span id="avatar-url-input-error" className="popup__input-error">Введите адрес сайта.</span>
-          </div>
-        </PopupWithForm>
+
         <PopupWithForm
           name='delete_card'
           title='Вы уверены?'
