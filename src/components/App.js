@@ -1,11 +1,12 @@
-import { useEffect, useState,  } from 'react';
+import { useEffect, useState, } from 'react';
 import Footer from "./Footer.js";
 import Header from "./Header.js";
 import ImagePopup from "./ImagePopup.js";
 import Main from "./Main.js";
 import PopupWithForm from "./PopupWithForm.js";
-import {api} from "../utils/Api.js"
+import { api } from "../utils/Api.js"
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
+import EditProfilePopup from './EditProfilePopup.js';
 
 function App() {
   const [isEditProfilePopupOpen, setEditProfilePopupState] = useState(false);
@@ -16,32 +17,27 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
 
-  function handleEditProfileClick() {
-    setEditProfilePopupState(true);
-  }
+  const handleEditProfileClick = () => setEditProfilePopupState(true);
+  const handleAddPlaceClick = () => setAddPlacePopupState(true);
+  const handleEditAvatarClick = () => setEditAvatarPopupState(true);
+  const handleDeleteCardClick = () => setDeleteCardPopupOpenState(true);
+  const handleImageCardClick = () => setImageCardPopupOpenState(true);
 
-  function handleAddPlaceClick() {
-    setAddPlacePopupState(true);
-  }
-
-  function handleEditAvatarClick() {
-    setEditAvatarPopupState(true);
-  }
-
-  function handleDeleteCardClick() {
-    setDeleteCardPopupOpenState(true);
-  }
-
-  function handleImageCardClick() {
-    setImageCardPopupOpenState(true);
-  }
-
-  function handleCardClick(card) {
+  const handleCardClick = (card) => {
     setSelectedCard(card);
     handleImageCardClick();
   }
 
-  function closeAllPopups() {
+  const handleUpdateUser = ({ name, about }) => {
+    api.addUser({ name, about }, 'users/me')
+      .then((user) => {
+        setCurrentUser(user)
+      })
+      .catch((err) => console.log(err));
+    closeAllPopups();
+  }
+
+  const closeAllPopups = () => {
     isEditProfilePopupOpen && setEditProfilePopupState(false);
     isAddPlacePopupOpen && setAddPlacePopupState(false);
     isEditAvatarPopupOpen && setEditAvatarPopupState(false);
@@ -84,55 +80,22 @@ function App() {
     <div className="root">
       <div className="page">
         <CurrentUserContext.Provider value={currentUser}>
-        <Header />
-        <Main
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          onEditAvatar={handleEditAvatarClick}
-          onDeleteCard={handleDeleteCardClick}
-          onCardClick={handleCardClick}
-        />
-        <Footer />
+          <Header />
+          <Main
+            onEditProfile={handleEditProfileClick}
+            onAddPlace={handleAddPlaceClick}
+            onEditAvatar={handleEditAvatarClick}
+            onDeleteCard={handleDeleteCardClick}
+            onCardClick={handleCardClick}
+          />
+          <Footer />
+          <EditProfilePopup isOpen={isEditProfilePopupOpen} onUpdateUser={handleUpdateUser} onClose={closeAllPopups} />
         </CurrentUserContext.Provider>
         <ImagePopup
           card={selectedCard}
           isOpen={isImageCardPopupOpen}
           onClose={closeAllPopups}
         />
-        <PopupWithForm
-          name='place_edit'
-          title='Редактировать профиль'
-          isOpen={isEditProfilePopupOpen}
-          onClose={closeAllPopups}
-          buttonText={'Сохранить'}
-        >
-          <div className="popup__field">
-            <input
-              id="name-input"
-              type="text"
-              name="username"
-              className="popup__input popup__input_edit-form_name"
-              placeholder="Имя"
-              minLength="2"
-              maxLength="40"
-              required
-            />
-            <span id="name-input-error" className="popup__input-error">Вы пропустили это поле.</span>
-          </div>
-          <div className="popup__field">
-            <input
-              id="job-input"
-              type="text"
-              name="jobInfo"
-              className="popup__input popup__input_edit-form_job"
-              placeholder="Профессиональная деятельность"
-              minLength="2"
-              maxLength="200"
-              required
-            />
-            <span id="job-input-error" className="popup__input-error">Вы пропустили это поле.</span>
-          </div>
-        </PopupWithForm>
         <PopupWithForm
           name='place_add'
           title='Новое место'
