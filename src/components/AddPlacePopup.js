@@ -1,38 +1,25 @@
 import PopupWithForm from './PopupWithForm.js';
-import { useState } from 'react'
 
-function AddPlacePopup({ isOpen, onClose, onSubmit }) {
-  const [placeName, setPlaceName] = useState('');
-  const [placeLink, setPlaceLink] = useState('');
-
-  const clearInputs = () => {
-    setPlaceName('');
-    setPlaceLink('');
-  }
+function AddPlacePopup({ isOpen, onClose, onSubmit, name, link, handlePlace, handleLink  }) {
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ name: placeName, link: placeLink });
-    clearInputs();
+    onSubmit({ name, link });
   }
-  const handleClose = () => {
-    onClose();
-    clearInputs();
-  }
-  const handlePlaceName = (e) => setPlaceName(e.target.value);
-  const handlePlaceLink = (e) => setPlaceLink(e.target.value);
+  const handlePlaceName = (e) => handlePlace(e.target.value);
+  const handlePlaceLink = (e) => handleLink(e.target.value);
 
   return (
     <PopupWithForm
       name='place_add'
       title='Новое место'
       isOpen={isOpen}
-      onClose={handleClose}
+      onClose={onClose}
       buttonText={'Создать'}
       onSubmit={handleSubmit}
     >
       <div className="popup__field">
         <input
-          value={placeName}
+          value={name}
           id="place-name-input"
           type="text"
           name="placename"
@@ -47,7 +34,7 @@ function AddPlacePopup({ isOpen, onClose, onSubmit }) {
       </div>
       <div className="popup__field">
         <input
-          value={placeLink}
+          value={link}
           id="url-input"
           type="url"
           name="imgLink"

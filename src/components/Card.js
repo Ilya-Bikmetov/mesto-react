@@ -7,7 +7,6 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
   const handleLike = () => onCardLike(card);
   const handleDeleteClick  = () => onCardDelete(card);
 
-
   return (
     <li className="element">
       <button onClick={handleDeleteClick} type="button" aria-label="Удалить" className="element__trash" style={

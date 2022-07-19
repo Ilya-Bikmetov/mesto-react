@@ -1,9 +1,6 @@
-import { useRef } from "react"
-import PopupWithForm from "./PopupWithForm.js"
-export default function EditAvatarPopup({ isOpen, onUpdateAvatar, onClose }) {
+import PopupWithForm from "./PopupWithForm.js";
 
-  const avatarInputLink = useRef('');
-
+export default function EditAvatarPopup({ isOpen, onUpdateAvatar, onClose, avatarInputLink }) {
   const handleClose = () => {
     onClose();
     avatarInputLink.current.value = '';

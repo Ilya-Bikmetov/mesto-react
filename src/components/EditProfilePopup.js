@@ -1,10 +1,8 @@
 import PopupWithForm from "./PopupWithForm.js";
-import { useState, useEffect, useContext } from "react";
+import { useEffect, useContext } from "react";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 
 function EditProfilePopup({ name, description, isOpen, onClose, onUpdateUser, handleInputDescription, handleInputName  }) {
-  // const [name, setName] = useState('');
-  // const [description, setDescription] = useState('');
   const currentUser = useContext(CurrentUserContext);
 
   const handleChangeName = (e) => handleInputName(e.target.value);
@@ -16,17 +14,11 @@ function EditProfilePopup({ name, description, isOpen, onClose, onUpdateUser, ha
       about: description
     });
   }
-  // const handleClose = () => {
-  //   onClose();
-  //   handleInputName(currentUser.name);
-  //   handleInputDescription(currentUser.about);
-  // }
 
   useEffect(() => {
     handleInputName(currentUser.name);
     handleInputDescription(currentUser.about);
   }, [currentUser])
-
 
   return (
     <PopupWithForm

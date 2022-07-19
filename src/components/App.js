@@ -1,4 +1,4 @@
-import { useEffect, useState, } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Footer from "./Footer.js";
 import Header from "./Header.js";
 import ImagePopup from "./ImagePopup.js";
@@ -18,9 +18,12 @@ function App() {
   const [isImageCardPopupOpen, setImageCardPopupOpenState] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({ name: '', about: '', avatar: '' });
+  const [cards, setCards] = useState([]);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [cards, setCards] = useState([]);
+  const [placeName, setPlaceName] = useState('');
+  const [placeLink, setPlaceLink] = useState('');
+  const avatarInputLink = useRef('');
 
   function handleCardLike(card) {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
@@ -46,17 +49,11 @@ function App() {
     closeAllPopups();
   }
 
-  useEffect(() => {
-    api.getInitialCards('cards')
-      .then((items) => {
-        setCards(items);
-      })
-      .catch((err) => console.log(err));
-
-  }, []);
-
   const handleInputName = (userName) => setName(userName);
   const handleInputDescription = (userDescription) => setDescription(userDescription);
+  const handleInputPlaceName = (place) => setPlaceName(place);
+  const handleInputPlaceLink = (url) => setPlaceLink(url);
+
   const handleEditProfileClick = () => setEditProfilePopupState(true);
   const handleAddPlaceClick = () => setAddPlacePopupState(true);
   const handleEditAvatarClick = () => setEditAvatarPopupState(true);
@@ -99,8 +96,18 @@ function App() {
       setName(currentUser.name);
       setDescription(currentUser.about);
     }
-    isAddPlacePopupOpen && setAddPlacePopupState(false);
-    isEditAvatarPopupOpen && setEditAvatarPopupState(false);
+
+    if (isAddPlacePopupOpen) {
+      setAddPlacePopupState(false);
+      setPlaceName('');
+      setPlaceLink('');
+    }
+
+    if (isEditAvatarPopupOpen) {
+      setEditAvatarPopupState(false);
+      avatarInputLink.current.value = '';
+    }
+
     isDeleteCardPopupOpen && setDeleteCardPopupOpenState(false);
     isImageCardPopupOpen && setImageCardPopupOpenState(false);
   }
@@ -136,6 +143,15 @@ function App() {
 
   }, []);
 
+  useEffect(() => {
+    api.getInitialCards('cards')
+      .then((items) => {
+        setCards(items);
+      })
+      .catch((err) => console.log(err));
+
+  }, []);
+
   return (
     <div className="root">
       <div className="page">
@@ -162,14 +178,32 @@ function App() {
           />
           <Footer />
         </CurrentUserContext.Provider>
-        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onUpdateAvatar={handleUpdateAvatar} onClose={closeAllPopups} />
+        <EditAvatarPopup
+          isOpen={isEditAvatarPopupOpen}
+          onUpdateAvatar={handleUpdateAvatar}
+          onClose={closeAllPopups}
+          avatarInputLink={avatarInputLink}
+        />
         <ImagePopup
           card={selectedCard}
           isOpen={isImageCardPopupOpen}
           onClose={closeAllPopups}
         />
-        <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onSubmit={handleAddPlaceSubmit} />
-        <DeleteCardPopup card={selectedCard} isOpen={isDeleteCardPopupOpen} onClose={closeAllPopups} onSubmit={submitCardDelete}/>
+        <AddPlacePopup
+          isOpen={isAddPlacePopupOpen}
+          onClose={closeAllPopups}
+          onSubmit={handleAddPlaceSubmit}
+          name={placeName}
+          link={placeLink}
+          handlePlace={handleInputPlaceName}
+          handleLink={handleInputPlaceLink}
+        />
+        <DeleteCardPopup
+          card={selectedCard}
+          isOpen={isDeleteCardPopupOpen}
+          onClose={closeAllPopups}
+          onSubmit={submitCardDelete}
+        />
       </div>
     </div>
 
