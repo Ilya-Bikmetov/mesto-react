@@ -54,7 +54,7 @@ class Api {
       .then(this._checkResponse)
   }
 
-  addCard(name, link, url) {
+  addCard({name, link, url}) {
     const body = {
       name,
       link,
