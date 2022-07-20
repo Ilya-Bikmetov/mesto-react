@@ -5,11 +5,22 @@ function AddPlacePopup({ isOpen, onClose, onSubmit }) {
   const [placeName, setPlaceName] = useState('');
   const [placeLink, setPlaceLink] = useState('');
 
-
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit({ name: placeName, link: placeLink });
+    resetForm();
   }
+
+  const handleClose = () => {
+    onClose();
+    resetForm();
+  }
+
+  const resetForm = () => {
+    setPlaceName('');
+    setPlaceLink('');
+  }
+
   const handlePlaceName = (e) => setPlaceName(e.target.value);
   const handlePlaceLink = (e) => setPlaceLink(e.target.value);
 
@@ -18,7 +29,7 @@ function AddPlacePopup({ isOpen, onClose, onSubmit }) {
       name='place_add'
       title='Новое место'
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       buttonText={'Создать'}
       onSubmit={handleSubmit}
     >
