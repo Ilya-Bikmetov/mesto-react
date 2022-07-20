@@ -22,7 +22,7 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, onCardLike
             <p className="profile__subtitle">{currentUser.about}</p>
           </div>
         </div>
-        <button onClick={onAddPlace} type="button" aria-label="Добавить" className="profile__add-button"></button>
+        <button onClick={onAddPlace} type="button" aria-label="Добавить" className="profile__add-button" />
       </section>
       <section className="elements">
         <ul className="elements__list">

@@ -1,12 +1,17 @@
 import PopupWithForm from './PopupWithForm.js';
+import { useState } from 'react';
 
-function AddPlacePopup({ isOpen, onClose, onSubmit, name, link, handlePlace, handleLink  }) {
+function AddPlacePopup({ isOpen, onClose, onSubmit }) {
+  const [placeName, setPlaceName] = useState('');
+  const [placeLink, setPlaceLink] = useState('');
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ name, link });
+    onSubmit({ name: placeName, link: placeLink });
   }
-  const handlePlaceName = (e) => handlePlace(e.target.value);
-  const handlePlaceLink = (e) => handleLink(e.target.value);
+  const handlePlaceName = (e) => setPlaceName(e.target.value);
+  const handlePlaceLink = (e) => setPlaceLink(e.target.value);
 
   return (
     <PopupWithForm
@@ -19,7 +24,7 @@ function AddPlacePopup({ isOpen, onClose, onSubmit, name, link, handlePlace, han
     >
       <div className="popup__field">
         <input
-          value={name}
+          value={placeName}
           id="place-name-input"
           type="text"
           name="placename"
@@ -34,7 +39,7 @@ function AddPlacePopup({ isOpen, onClose, onSubmit, name, link, handlePlace, han
       </div>
       <div className="popup__field">
         <input
-          value={link}
+          value={placeLink}
           id="url-input"
           type="url"
           name="imgLink"

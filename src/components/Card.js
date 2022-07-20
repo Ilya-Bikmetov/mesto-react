@@ -3,9 +3,12 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext.js'
 
 function Card({ card, onCardClick, onCardLike, onCardDelete }) {
   const currentUser = useContext(CurrentUserContext);
+  const isOwner = card.likes.some(item => item._id === currentUser._id);
+
   const handleClick = () => onCardClick(card);
   const handleLike = () => onCardLike(card);
-  const handleDeleteClick  = () => onCardDelete(card);
+  const handleDeleteClick = () => onCardDelete(card);
+
 
   return (
     <li className="element">
@@ -18,7 +21,7 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
       <div className="element__sign">
         <h2 className="element__title">{card.name}</h2>
         <button className={
-          card.likes.some(item => item._id === currentUser._id)
+          isOwner
             ? `element__like element__like_active`
             : `element__like`
         }

@@ -19,10 +19,6 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({ name: '', about: '', avatar: '' });
   const [cards, setCards] = useState([]);
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [placeName, setPlaceName] = useState('');
-  const [placeLink, setPlaceLink] = useState('');
   const avatarInputLink = useRef('');
 
   function handleCardLike(card) {
@@ -35,7 +31,10 @@ function App() {
 
   function handleCardDelete(card) {
     api.deleteCard(`cards/${card._id}`)
-      .then(() => setCards((cards) => cards.filter((c) => c._id !== card._id)))
+      .then(() => {
+        setCards((cards) => cards.filter((c) => c._id !== card._id));
+        closeAllPopups();
+      })
       .catch((err) => console.log(err));
   }
 
@@ -44,15 +43,7 @@ function App() {
     setDeleteCardPopupOpenState(true);
   }
 
-  const submitCardDelete = (card) => {
-    handleCardDelete(card);
-    closeAllPopups();
-  }
-
-  const handleInputName = (userName) => setName(userName);
-  const handleInputDescription = (userDescription) => setDescription(userDescription);
-  const handleInputPlaceName = (place) => setPlaceName(place);
-  const handleInputPlaceLink = (url) => setPlaceLink(url);
+  const submitCardDelete = (card) => handleCardDelete(card);
 
   const handleEditProfileClick = () => setEditProfilePopupState(true);
   const handleAddPlaceClick = () => setAddPlacePopupState(true);
@@ -69,38 +60,36 @@ function App() {
     api.addUser({ name, about }, 'users/me')
       .then((user) => {
         setCurrentUser(user);
+        closeAllPopups();
       })
       .catch((err) => console.log(err));
-    closeAllPopups();
   }
 
   const handleUpdateAvatar = (avatarLink) => {
     api.setAvatar('users/me/avatar', avatarLink)
       .then((user) => {
         setCurrentUser(user);
+        closeAllPopups();
       })
       .catch((err) => console.log(err));
-    closeAllPopups();
   }
 
   const handleAddPlaceSubmit = ({ name, link }) => {
     api.addCard({ name, link, url: 'cards' })
-      .then((card) => setCards([card, ...cards]))
+      .then((card) => {
+        setCards([card, ...cards]);
+        closeAllPopups();
+      })
       .catch((err) => console.log(err));
-    closeAllPopups();
   }
 
   const closeAllPopups = () => {
     if (isEditProfilePopupOpen) {
       setEditProfilePopupState(false);
-      setName(currentUser.name);
-      setDescription(currentUser.about);
     }
 
     if (isAddPlacePopupOpen) {
       setAddPlacePopupState(false);
-      setPlaceName('');
-      setPlaceLink('');
     }
 
     if (isEditAvatarPopupOpen) {
@@ -171,10 +160,6 @@ function App() {
             isOpen={isEditProfilePopupOpen}
             onUpdateUser={handleUpdateUser}
             onClose={closeAllPopups}
-            handleInputDescription={handleInputDescription}
-            handleInputName={handleInputName}
-            name={name}
-            description={description}
           />
           <Footer />
         </CurrentUserContext.Provider>
@@ -193,10 +178,6 @@ function App() {
           isOpen={isAddPlacePopupOpen}
           onClose={closeAllPopups}
           onSubmit={handleAddPlaceSubmit}
-          name={placeName}
-          link={placeLink}
-          handlePlace={handleInputPlaceName}
-          handleLink={handleInputPlaceLink}
         />
         <DeleteCardPopup
           card={selectedCard}
