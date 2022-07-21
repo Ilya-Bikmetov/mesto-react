@@ -1,36 +1,36 @@
 import PopupWithForm from './PopupWithForm.js';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function AddPlacePopup({ isOpen, onClose, onSubmit }) {
   const [placeName, setPlaceName] = useState('');
   const [placeLink, setPlaceLink] = useState('');
+  const [buttonSubmitName, setButtonSubmitName] = useState('Создать');
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const buttonSubmitDefaultName = buttonSubmitName;
+    setButtonSubmitName('Cохранение...')
     onSubmit({ name: placeName, link: placeLink });
-    resetForm();
-  }
-
-  const handleClose = () => {
-    onClose();
-    resetForm();
-  }
-
-  const resetForm = () => {
-    setPlaceName('');
-    setPlaceLink('');
+    setTimeout(() => setButtonSubmitName(buttonSubmitDefaultName), 2000);
   }
 
   const handlePlaceName = (e) => setPlaceName(e.target.value);
   const handlePlaceLink = (e) => setPlaceLink(e.target.value);
+
+  useEffect(() => {
+    if (isOpen) {
+      setPlaceName('');
+      setPlaceLink('');
+    }
+  }, [isOpen]);
 
   return (
     <PopupWithForm
       name='place_add'
       title='Новое место'
       isOpen={isOpen}
-      onClose={handleClose}
-      buttonText={'Создать'}
+      onClose={onClose}
+      buttonText={buttonSubmitName}
       onSubmit={handleSubmit}
     >
       <div className="popup__field">

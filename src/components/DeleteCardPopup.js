@@ -1,10 +1,16 @@
+import { useState } from "react";
 import PopupWithForm from "./PopupWithForm.js";
 
 function DeleteCardPopup({ isOpen, onClose, onSubmit, card }) {
-const handleSubmit = (e) => {
-  e.preventDefault();
-  onSubmit(card);
-}
+  const [buttonSubmitName, setButtonSubmitName] = useState('Да');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const buttonSubmitDefaultName = buttonSubmitName;
+    setButtonSubmitName('Удаление...')
+    onSubmit(card);
+    setTimeout(() => setButtonSubmitName(buttonSubmitDefaultName), 2000);
+  }
 
   return (
     <PopupWithForm
@@ -12,7 +18,7 @@ const handleSubmit = (e) => {
       title='Вы уверены?'
       isOpen={isOpen}
       onClose={onClose}
-      buttonText={'Да'}
+      buttonText={buttonSubmitName}
       onSubmit={handleSubmit}
     >
     </PopupWithForm>

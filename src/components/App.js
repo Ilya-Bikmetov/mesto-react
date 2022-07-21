@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import Footer from "./Footer.js";
 import Header from "./Header.js";
 import ImagePopup from "./ImagePopup.js";
@@ -19,7 +19,6 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({ name: '', about: '', avatar: '' });
   const [cards, setCards] = useState([]);
-  const avatarInputLink = useRef('');
 
   function handleCardLike(card) {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
@@ -84,35 +83,26 @@ function App() {
   }
 
   const closeAllPopups = () => {
-    if (isEditProfilePopupOpen) {
-      setEditProfilePopupState(false);
-    }
-
-    if (isAddPlacePopupOpen) {
-      setAddPlacePopupState(false);
-    }
-
-    if (isEditAvatarPopupOpen) {
-      setEditAvatarPopupState(false);
-      avatarInputLink.current.value = '';
-    }
-
+    isEditProfilePopupOpen && setEditProfilePopupState(false);
+    isAddPlacePopupOpen && setAddPlacePopupState(false);
+    isEditAvatarPopupOpen && setEditAvatarPopupState(false);
     isDeleteCardPopupOpen && setDeleteCardPopupOpenState(false);
     isImageCardPopupOpen && setImageCardPopupOpenState(false);
   }
 
+  function handleEscClose(evt) {
+    if (evt.key === 'Escape') {
+      closeAllPopups();
+    }
+  }
+
+  function handleMouseClickClose(evt) {
+    if (evt.target.classList.contains('popup'))
+      closeAllPopups();
+  }
+
   useEffect(() => {
     if (isEditProfilePopupOpen || isAddPlacePopupOpen || isEditAvatarPopupOpen || isDeleteCardPopupOpen || isImageCardPopupOpen) {
-      function handleEscClose(evt) {
-        if (evt.key === 'Escape') {
-          closeAllPopups();
-        }
-      }
-      function handleMouseClickClose(evt) {
-        if (evt.target.classList.contains('popup'))
-          closeAllPopups();
-      }
-
       document.addEventListener('mousedown', handleMouseClickClose);
       document.addEventListener('keydown', handleEscClose);
 
@@ -167,7 +157,6 @@ function App() {
           isOpen={isEditAvatarPopupOpen}
           onUpdateAvatar={handleUpdateAvatar}
           onClose={closeAllPopups}
-          avatarInputLink={avatarInputLink}
         />
         <ImagePopup
           card={selectedCard}

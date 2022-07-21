@@ -1,16 +1,22 @@
+import { useState,useEffect, useRef } from "react";
 import PopupWithForm from "./PopupWithForm.js";
 
-export default function EditAvatarPopup({ isOpen, onUpdateAvatar, onClose, avatarInputLink }) {
-  const handleClose = () => {
-    onClose();
-    avatarInputLink.current.value = '';
-  }
+export default function EditAvatarPopup({ isOpen, onUpdateAvatar, onClose }) {
+  const avatarLink = useRef();
+  const [buttonSubmitName, setButtonSubmitName] = useState('Сохранить');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onUpdateAvatar(avatarInputLink.current.value);
-    avatarInputLink.current.value = '';
+    const buttonSubmitDefaultName = buttonSubmitName;
+    setButtonSubmitName('Cохранение...')
+    onUpdateAvatar(avatarLink.current.value);
+    setTimeout(() => setButtonSubmitName(buttonSubmitDefaultName), 800);
   }
+
+  useEffect(() => {
+    if (isOpen)
+      avatarLink.current.value = '';
+  }, [isOpen]);
 
   return (
     <PopupWithForm
@@ -18,12 +24,12 @@ export default function EditAvatarPopup({ isOpen, onUpdateAvatar, onClose, avata
       title='Обновить аватар'
       isOpen={isOpen}
       onSubmit={handleSubmit}
-      onClose={handleClose}
-      buttonText={'Сохранить'}
+      onClose={onClose}
+      buttonText={buttonSubmitName}
     >
       <div className="popup__field">
         <input
-          ref={avatarInputLink}
+          ref={avatarLink}
           id="avatar-url-input"
           type="url"
           name="avatarLink"
@@ -35,6 +41,4 @@ export default function EditAvatarPopup({ isOpen, onUpdateAvatar, onClose, avata
       </div>
     </PopupWithForm>
   )
-
 }
-
